@@ -89,4 +89,13 @@ contract CharityDonationTracker {
     {
         return donation[_campaignId];
     }
+
+    function getAllCampaigns() public view returns (Campaign[] memory)
+    {
+        Campaign[] memory allCampaigns = new Campaign[](campaignCount);
+        for (uint256 i = 1; i <= campaignCount; i++) {
+            allCampaigns[i]=campaigns[i];
+        }
+        return allCampaigns;
+    }
 }

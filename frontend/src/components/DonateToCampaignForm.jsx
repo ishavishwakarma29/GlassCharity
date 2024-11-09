@@ -5,10 +5,10 @@ import "./css/DonateToCampaignForm.css";
 function DonateToCampaignForm() {
   const [campaignId, setCampaignId] = useState("");
   const [donationAmount, setDonationAmount] = useState("");
+  const [statusMessage, setStatusMessage] = useState("");
 
-  const handleDonate = (event) => {
+  const handleDonate = async (event) => {
     event.preventDefault();
-    // Handle donation logic here
   };
 
   return (
@@ -34,6 +34,7 @@ function DonateToCampaignForm() {
           />
         </div>
         <button type="submit">Donate</button>
+        {statusMessage && <p className="status-message">{statusMessage}</p>}
       </form>
     </div>
   );

@@ -6,11 +6,11 @@ function CreateCampaignForm() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [targetAmount, setTargetAmount] = useState("");
-  const [image, setImage] = useState(null);
+//   const [image, setImage] = useState(null);
+  const [statusMessage, setStatusMessage] = useState("");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // logic here
   };
 
   return (
@@ -43,12 +43,13 @@ function CreateCampaignForm() {
             required
           />
         </div>
-        <div className="form-group">
+        {/* <div className="form-group">
           <label>Campaign Image:</label>
           <input type="file" onChange={(e) => setImage(e.target.files[0])} />
-        </div>
+        </div> */}
         <button type="submit">Create Campaign</button>
       </form>
+      {statusMessage && <p className="status-message">{statusMessage}</p>}
     </div>
   );
 }
