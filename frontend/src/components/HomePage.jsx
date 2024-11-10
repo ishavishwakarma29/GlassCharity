@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "./css/HomePage.css";
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
 import { ethers } from "ethers";
 import {
   abi,
@@ -9,6 +7,7 @@ import {
   CONTRACT_ADDRESS,
   PRIVATE_KEY,
 } from "../utils/constants";
+import { pinata } from "../utils/pinataConfig.ts";
 
 function HomePage () {
   const provider = new ethers.JsonRpcProvider(API_URL);
@@ -29,9 +28,9 @@ function HomePage () {
         for(var i=0; i<actualValues.length; i++){
           arr.push({
             id: 1,
-            logo: 'logo.png',
+            logo: await pinata.gateways.convert(actualValues[i][6]),
             title: actualValues[i][1],
-            description: actualValues[i][2]
+            description: actualValues[i][2],
           });
         }
         console.log(arr);

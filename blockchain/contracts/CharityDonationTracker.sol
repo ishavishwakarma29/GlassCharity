@@ -20,6 +20,7 @@ contract CharityDonationTracker {
         uint256 targetAmount;
         uint256 totalDonated;
         bool isActive;
+        string imageHash;
     }
 
     // Mapping to store all campaigns
@@ -47,7 +48,8 @@ contract CharityDonationTracker {
     function createCampaign(
         string memory _name, 
         string memory _description, 
-        uint256 _targetAmount
+        uint256 _targetAmount,
+        string memory ipfshash
     ) public onlyOwner {
         campaigns[campaignCount] = Campaign({
             id: campaignCount,
@@ -55,7 +57,8 @@ contract CharityDonationTracker {
             description: _description,
             targetAmount: _targetAmount,
             totalDonated: 0,
-            isActive: true
+            isActive: true,
+            imageHash: ipfshash
         });
         campaignCount++;
     }

@@ -8,12 +8,13 @@ import {
   CONTRACT_ADDRESS,
   PRIVATE_KEY,
 } from "../utils/constants";
+import { pinata } from "../utils/pinataConfig.ts";
 
 function CreateCampaignForm() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [targetAmount, setTargetAmount] = useState("");
-//   const [image, setImage] = useState(null);
+  const [image, setImage] = useState(null);
   const [statusMessage, setStatusMessage] = useState("");
   const provider = new ethers.JsonRpcProvider(API_URL);
   const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
@@ -24,7 +25,8 @@ function CreateCampaignForm() {
     event.preventDefault();
       try {
         if (window.ethereum) {
-          const result = await contract.createCampaign(name, description, targetAmount);
+          const upload = await pinata.upload.file(image);
+          const result = await contract.createCampaign(name, description, targetAmount, upload.IpfsHash);
           console.log(result);
         } else {
           console.log("Metamask Not Found");
@@ -64,10 +66,10 @@ function CreateCampaignForm() {
             required
           />
         </div>
-        {/* <div className="form-group">
+        <div className="form-group">
           <label>Campaign Image:</label>
           <input type="file" onChange={(e) => setImage(e.target.files[0])} />
-        </div> */}
+        </div>
         <button type="submit">Create Campaign</button>
       </form>
       {statusMessage && <p className="status-message">{statusMessage}</p>}
