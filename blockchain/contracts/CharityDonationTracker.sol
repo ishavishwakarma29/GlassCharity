@@ -49,7 +49,6 @@ contract CharityDonationTracker {
         string memory _description, 
         uint256 _targetAmount
     ) public onlyOwner {
-        campaignCount++;
         campaigns[campaignCount] = Campaign({
             id: campaignCount,
             name: _name,
@@ -58,6 +57,7 @@ contract CharityDonationTracker {
             totalDonated: 0,
             isActive: true
         });
+        campaignCount++;
     }
 
     // Function to donate to a specific campaign
@@ -93,7 +93,7 @@ contract CharityDonationTracker {
     function getAllCampaigns() public view returns (Campaign[] memory)
     {
         Campaign[] memory allCampaigns = new Campaign[](campaignCount);
-        for (uint256 i = 1; i <= campaignCount; i++) {
+        for (uint256 i = 0; i < campaignCount; i++) {
             allCampaigns[i]=campaigns[i];
         }
         return allCampaigns;

@@ -1,6 +1,13 @@
 // CreateCampaignForm.js
 import React, { useState } from "react";
 import "./css/CreateCampaignForm.css";
+import { ethers } from "ethers";
+import {
+  abi,
+  API_URL,
+  CONTRACT_ADDRESS,
+  PRIVATE_KEY,
+} from "../utils/constants";
 
 function CreateCampaignForm() {
   const [name, setName] = useState("");
@@ -8,9 +15,23 @@ function CreateCampaignForm() {
   const [targetAmount, setTargetAmount] = useState("");
 //   const [image, setImage] = useState(null);
   const [statusMessage, setStatusMessage] = useState("");
+  const provider = new ethers.JsonRpcProvider(API_URL);
+  const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
+  const contractAddress = CONTRACT_ADDRESS;
+  const contract = new ethers.Contract(contractAddress, abi, wallet);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+      try {
+        if (window.ethereum) {
+          const result = await contract.createCampaign(name, description, targetAmount);
+          console.log(result);
+        } else {
+          console.log("Metamask Not Found");
+        }
+      } catch (err) {
+        console.log(err);
+      }
   };
 
   return (
