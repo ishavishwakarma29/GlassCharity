@@ -20,7 +20,7 @@ function LandingPage() {
     }
 
   return (
-    <div className="container">
+    <div className="cont">
       <div className="subC">
         <div className="home-page">
           <h1 className="heading">Glass Charity</h1>

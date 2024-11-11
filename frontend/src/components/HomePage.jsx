@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "./css/HomePage.css";
+import Navbar from "./Navbar.jsx";
 import { ethers } from "ethers";
+
 import {
   abi,
   CONTRACT_ADDRESS,
@@ -48,15 +50,9 @@ function HomePage () {
 
      return (
        <>
+         <Navbar></Navbar>
          <div className="page">
            <header className="header">
-             <h1 className="heading">Our Charity Campaigns</h1>
-             <p className="subheading">
-               Explore all active campaigns and support a cause today! or
-             </p>
-             <a className="button" href="/create-campaign">
-               Create a Campaign
-             </a>
            </header>
            <div className="grid">
              {campaignsData.map((campaign) => (
