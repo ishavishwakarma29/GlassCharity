@@ -6,7 +6,7 @@ a{
     flex-direction: column;
     align-items: center;
     padding: 20px;
-    background-color: #f4f8fb;
+    background-color: #f3e7e9;
     color: #333;
 }
 
@@ -37,7 +37,7 @@ a{
 
 /* Individual campaign card */
 .card {
-    background-color: #fff;
+    background-color: #eef9b6;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
@@ -71,7 +71,7 @@ a{
 }
 
 .button {
-    background-color: #2a74e3;
+    background-color: #4caf50;
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -82,5 +82,5 @@ a{
 }
 
 .button:hover {
-    background-color: #205bb5;
+    background-color: #45a049;
 }

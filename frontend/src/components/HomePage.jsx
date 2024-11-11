@@ -3,23 +3,23 @@ import "./css/HomePage.css";
 import { ethers } from "ethers";
 import {
   abi,
-  API_URL,
   CONTRACT_ADDRESS,
-  PRIVATE_KEY,
 } from "../utils/constants";
 import { pinata } from "../utils/pinataConfig.ts";
 
 function HomePage () {
-  const provider = new ethers.JsonRpcProvider(API_URL);
-  const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
-  const contractAddress = CONTRACT_ADDRESS;
-  const contract = new ethers.Contract(contractAddress, abi, wallet);
   const [campaignsData, setCampaignsData] = useState([]);
 
   async function getAllCampaigns() {
     try {
       if (window.ethereum) {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
+        const signer = await provider.getSigner();
+        const contractAddress = CONTRACT_ADDRESS;
+        const contract = new ethers.Contract(contractAddress, abi, signer);
         const AllCampaigns = await contract.getAllCampaigns();
+        console.log(AllCampaigns);
         const actualValues = Array.from(
           { length: Object.keys(AllCampaigns).length },
           (_, i) => Object.values(AllCampaigns[i])
@@ -27,10 +27,10 @@ function HomePage () {
         var arr = [];
         for(var i=0; i<actualValues.length; i++){
           arr.push({
-            id: 1,
-            logo: await pinata.gateways.convert(actualValues[i][6]),
-            title: actualValues[i][1],
-            description: actualValues[i][2],
+            id: actualValues[i][1],
+            logo: await pinata.gateways.convert(actualValues[i][7]),
+            title: actualValues[i][2],
+            description: actualValues[i][3],
           });
         }
         console.log(arr);

@@ -14,6 +14,7 @@ contract CharityDonationTracker {
 
     // Struct for each campaign
     struct Campaign {
+        address creatorAddress;
         uint256 id;
         string name;
         string description;
@@ -28,9 +29,6 @@ contract CharityDonationTracker {
 
     //mapping for donations
     mapping(uint256 => Donation[]) donation;
-
-    // Event for each donation
-    event NewDonation(uint256 indexed campaignId, address indexed donor, uint256 amount);
 
     // Modifier to restrict actions to the owner
     modifier onlyOwner() {
@@ -50,8 +48,9 @@ contract CharityDonationTracker {
         string memory _description, 
         uint256 _targetAmount,
         string memory ipfshash
-    ) public onlyOwner {
+    ) public {
         campaigns[campaignCount] = Campaign({
+            creatorAddress: msg.sender,
             id: campaignCount,
             name: _name,
             description: _description,
@@ -77,12 +76,12 @@ contract CharityDonationTracker {
             amount: msg.value,
             timestamp: block.timestamp
         }));
-
-        emit NewDonation(_campaignId, msg.sender, msg.value);
+        address payable rec = payable(campaign.creatorAddress);
+        rec.transfer(msg.value);
     }
 
     // Function to end a campaign
-    function endCampaign(uint256 _campaignId) public onlyOwner {
+    function endCampaign(uint256 _campaignId) public {
         campaigns[_campaignId].isActive = false;
     }
 

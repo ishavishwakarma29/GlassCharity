@@ -21,17 +21,20 @@ function LandingPage() {
 
   return (
     <div className="container">
-      <div className="home-page">
-        <h1>Welcome to the Transparent Charity Platform</h1>
-        <p>
-          Our mission is to bring transparency to charitable donations, ensuring
-          that every contribution reaches the intended cause. You can create a
-          campaign or donate to one already in need!
-        </p>
-        <div className="home-buttons">
-          <button className="home-button" onClick={getAccountAddress}>
-            Get Started
-          </button>
+      <div className="subC">
+        <div className="home-page">
+          <h1 className="heading">Glass Charity</h1>
+          <h2>Welcome to the Transparent Charity Platform</h2>
+          <p>
+            Our mission is to bring transparency to charitable donations,
+            ensuring that every contribution reaches the intended cause. You can
+            create a campaign or donate to one already in need!
+          </p>
+          <div className="home-buttons">
+            <button className="home-button" onClick={getAccountAddress}>
+              Get Started
+            </button>
+          </div>
         </div>
       </div>
     </div>

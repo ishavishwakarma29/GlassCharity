@@ -1,6 +1,8 @@
 // DonateToCampaignForm.js
 import React, { useState } from "react";
 import "./css/DonateToCampaignForm.css";
+import { ethers } from "ethers";
+import { abi, CONTRACT_ADDRESS } from "../utils/constants";
 
 function DonateToCampaignForm() {
   const [campaignId, setCampaignId] = useState("");
@@ -9,6 +11,23 @@ function DonateToCampaignForm() {
 
   const handleDonate = async (event) => {
     event.preventDefault();
+    try {
+      if (window.ethereum) {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
+        const signer = await provider.getSigner();
+        const contractAddress = CONTRACT_ADDRESS;
+        const contract = new ethers.Contract(contractAddress, abi, signer);
+        const value = ethers.parseEther(donationAmount);
+        const transaction = await contract.donate(campaignId, {value});
+        await transaction.wait();
+        console.log(transaction);
+      } else {
+        console.log("Metamask Not Found");
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (

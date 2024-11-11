@@ -4,9 +4,7 @@ import "./css/CreateCampaignForm.css";
 import { ethers } from "ethers";
 import {
   abi,
-  API_URL,
   CONTRACT_ADDRESS,
-  PRIVATE_KEY,
 } from "../utils/constants";
 import { pinata } from "../utils/pinataConfig.ts";
 
@@ -16,15 +14,16 @@ function CreateCampaignForm() {
   const [targetAmount, setTargetAmount] = useState("");
   const [image, setImage] = useState(null);
   const [statusMessage, setStatusMessage] = useState("");
-  const provider = new ethers.JsonRpcProvider(API_URL);
-  const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
-  const contractAddress = CONTRACT_ADDRESS;
-  const contract = new ethers.Contract(contractAddress, abi, wallet);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
       try {
         if (window.ethereum) {
+          const provider = new ethers.BrowserProvider(window.ethereum);
+          await provider.send("eth_requestAccounts", []);
+          const signer = await provider.getSigner();
+          const contractAddress = CONTRACT_ADDRESS;
+          const contract = new ethers.Contract(contractAddress, abi, signer);
           const upload = await pinata.upload.file(image);
           const result = await contract.createCampaign(name, description, targetAmount, upload.IpfsHash);
           console.log(result);
