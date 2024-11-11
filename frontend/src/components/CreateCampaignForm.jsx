@@ -25,7 +25,8 @@ function CreateCampaignForm() {
           const contractAddress = CONTRACT_ADDRESS;
           const contract = new ethers.Contract(contractAddress, abi, signer);
           const upload = await pinata.upload.file(image);
-          const result = await contract.createCampaign(name, description, targetAmount, upload.IpfsHash);
+          const target = ethers.parseEther(targetAmount);
+          const result = await contract.createCampaign(name, description, target, upload.IpfsHash);
           console.log(result);
         } else {
           console.log("Metamask Not Found");

@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { act, useEffect, useState } from "react";
 import "./css/HomePage.css";
 import Navbar from "./Navbar.jsx";
 import { ethers } from "ethers";
+import CampaignCard, {campaignCard} from "./CampaignCard.jsx";
 
 import {
   abi,
@@ -29,10 +30,14 @@ function HomePage () {
         var arr = [];
         for(var i=0; i<actualValues.length; i++){
           arr.push({
+            creatorAddress: actualValues[i][0],
             id: actualValues[i][1],
-            logo: await pinata.gateways.convert(actualValues[i][7]),
             title: actualValues[i][2],
             description: actualValues[i][3],
+             targetAmount: actualValues[i][4],
+             totalDonated: actualValues[i][5],
+             isActive: actualValues[i][6],
+            logo: await pinata.gateways.convert(actualValues[i][7]),
           });
         }
         console.log(arr);
@@ -56,16 +61,7 @@ function HomePage () {
            </header>
            <div className="grid">
              {campaignsData.map((campaign) => (
-               <div key={campaign.id} className="card">
-                 <img
-                   src={campaign.logo}
-                   alt="Campaign Logo"
-                   className="logo"
-                 />
-                 <h2 className="cardTitle">{campaign.title}</h2>
-                 <p className="cardDescription">{campaign.description}</p>
-                 <button className="button">Donate Now</button>
-               </div>
+                <CampaignCard campaign={campaign}></CampaignCard>
              ))}
            </div>
          </div>

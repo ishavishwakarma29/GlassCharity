@@ -32,7 +32,9 @@ a{
 .card {
     background-color: #eef9b6;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    -webkit-box-shadow: 2px 2px 6px #000000;
+       -moz-box-shadow: 0px 0px 6px #000000;
+            box-shadow: 2px 2px 6px #000000; 
     padding: 20px;
     text-align: center;
     transition: transform 0.2s ease;

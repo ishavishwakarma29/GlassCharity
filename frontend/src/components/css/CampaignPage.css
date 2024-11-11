@@ -1,0 +1,116 @@
+/* CampaignPage.css */
+
+.campaign-container {
+  background-color: #f3e7e9;
+  display: flex;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+.campaign-sidebar {
+     -webkit-box-shadow: 2px 2px 6px #000000;
+       -moz-box-shadow: 0px 0px 6px #000000;
+            box-shadow: 2px 2px 6px #000000; 
+  width: 350px;
+  padding: 20px;
+  background-color: #eef9b6;
+  border-right: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.campaign-logo {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ddd;
+  margin-bottom: 20px;
+}
+
+.campaign-title {
+  font-size: 1.6em;
+  color: #333;
+  text-align: center;
+}
+
+.campaign-creator {
+  font-size: 0.9em;
+  color: #666;
+  text-align: center;
+  margin-top: 5px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 15px;
+  background-color: #eee;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: #4caf50;
+  border-radius: 8px;
+}
+
+.progress-text {
+  font-size: 0.9em;
+  color: #555;
+  text-align: center;
+}
+
+.campaign-details {
+  flex: 1;
+  padding: 20px;
+}
+
+.campaign-description {
+  font-size: 1em;
+  color: #555;
+  line-height: 1.6;
+}
+
+.donation-section {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.donation-section h2 {
+  font-size: 1.5em;
+  margin-bottom: 15px;
+  color: #222;
+}
+
+.donation-input {
+  width: 60%;
+  padding: 10px;
+  font-size: 1em;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.donate-button {
+  width: 60%;
+  padding: 12px;
+  font-size: 1.1em;
+  color: white;
+  background-color: #4caf50;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.donate-button:hover {
+  background-color: #4caf50;
+}
+
+.donate-button:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
