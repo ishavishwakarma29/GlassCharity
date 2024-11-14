@@ -3,9 +3,10 @@ import { useSearchParams } from "react-router-dom";
 import { ethers } from "ethers";
 import "./css/CampaignPage.css";
 import { abi, CONTRACT_ADDRESS } from "../utils/constants";
+import {pinata} from "../utils/pinataConfig.ts";
 
 const CampaignPage = () => {
-  const [data] = useSearchParams();
+  const [id] = useSearchParams();
   const [campaign, setCampaign] = useState({});
   const [amount, setAmount] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -14,20 +15,25 @@ const CampaignPage = () => {
 
   useEffect(() => {  
     const fetchCampaignData = async () => {
-        const collected = Number(ethers.formatEther(data.get("totalDonated")));
-        const goal = Number(ethers.formatEther(data.get("targetAmount")));
-        console.log(collected);
-        console.log(goal);
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
+        const signer = await provider.getSigner();
+        const contractAddress = CONTRACT_ADDRESS;
+        const contract = new ethers.Contract(contractAddress, abi, signer);
+        const res = await contract.getCampaignById(id.get("id"));
+        const collected = ethers.formatEther(Object.values(res)[5]);
+        const goal = ethers.formatEther(Object.values(res)[4]);
         const percent = (collected*100/goal);
-        console.log(collectedPercent);
         setCampaign({
-          title: data.get("title"),
-          description: data.get("description"),
-          goal: ethers.formatEther(data.get("targetAmount")),
-          logoUrl: data.get("logo"),
-          creator: data.get("creatorAddress"),
+          id: Object.values(res)[1],
+          title: Object.values(res)[2],
+          description: Object.values(res)[3],
+          goal: ethers.formatEther(Object.values(res)[4]),
+          logoUrl: await pinata.gateways.convert(Object.values(res)[7]),
+          creator: Object.values(res)[0],
+          totalCollected: ethers.formatEther(Object.values(res)[5]),
         });
-        setAmountRaised(ethers.formatEther(data.get("totalDonated")));
+        setAmountRaised(ethers.formatEther(Object.values(res)[5]));
         setCollectedPercent(Math.min(100, percent).toFixed(10));
     };
 
@@ -44,15 +50,23 @@ const CampaignPage = () => {
        const contractAddress = CONTRACT_ADDRESS;
        const contract = new ethers.Contract(contractAddress, abi, signer);
        const value = ethers.parseEther(amount);
-       console.log(value);
-       const transaction = await contract.donate(data.get("id"), { value });
+       const transaction = await contract.donate(campaign.id, { value });
        await transaction.wait();
-       console.log(transaction);
+       console.log("from: "+transaction.from);
+       console.log("gasPrice: "+ethers.formatEther(transaction.gasPrice));
+       console.log("hash: "+transaction.hash);
+       console.log("to: "+transaction.to);
+        console.log("to: "+ethers.formatEther(transaction.value));
       alert("Thank you for your donation!");
-      const tot = Number(data.get("totalDonated")) + Number(value);
+      const tot = Number(ethers.parseEther(campaign.totalCollected)) + Number(value);
       setAmountRaised(ethers.formatEther(tot));
-      const percent = ((amountRaised+value)*100)/campaign.goal;
+      const percent = (amountRaised*100)/campaign.goal;
       setCollectedPercent(Math.min(100, percent).toFixed(10));
+      window.open(
+        "http://localhost:3000/receipt?hash="+transaction.hash+"&name="+campaign.title+"&address="+campaign.creator+"&logo="+(campaign.logoUrl.split('/').pop())+"&value="+value,
+        "mywindow",
+        "menubar=1,resizable=1,width=650,height=1024"
+      );
      } else {
        console.log("Metamask Not Found");
      }

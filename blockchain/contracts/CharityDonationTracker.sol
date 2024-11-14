@@ -100,4 +100,9 @@ contract CharityDonationTracker {
         }
         return allCampaigns;
     }
+
+    function getCampaignById(uint256 _campaignId) public view returns (Campaign memory)
+    {
+        return campaigns[_campaignId];
+    }
 }

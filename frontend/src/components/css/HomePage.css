@@ -22,7 +22,7 @@ a{
 /* Campaigns grid */
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(256px, 1fr));
     gap: 20px;
     width: 100%;
     max-width: 1200px;
@@ -37,6 +37,7 @@ a{
             box-shadow: 2px 2px 6px #000000; 
     padding: 20px;
     text-align: center;
+    height: 256px;
     transition: transform 0.2s ease;
 }
 

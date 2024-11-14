@@ -6,6 +6,7 @@ import CreateCampaignForm from "./components/CreateCampaignForm";
 import LandingPage from "./components/LandingPage";
 import "./App.css";
 import CampaignPage from "./components/CampaignPage";
+import DonationReceipt from "./components/DonationReceipt";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/home" element={<HomePage />} />
           <Route path="/create-campaign" element={<CreateCampaignForm />} />
           <Route path="/campaign-page" element={<CampaignPage />} />
+          <Route path="/receipt" element={<DonationReceipt />} />
         </Routes>
       </div>
     </Router>
