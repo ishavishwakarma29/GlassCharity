@@ -7,8 +7,13 @@ a{
     align-items: center;
     background-color: #f3e7e9;
     color: #333;
-    margin-top: 4%;
 }
+
+.toggle-button-container{
+  width: 200px;
+  margin-top: 4%;
+}
+
 
 /* Header section */
 .header {
@@ -80,4 +85,89 @@ a{
 
 .button:hover {
     background-color: #45a049;
+}
+
+.Toggle-switch {
+  margin-left: 10%;
+  margin-top: 2%;
+  position: relative;
+  width: 160px;
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  text-align: right;
+}
+.Toggle-switch-checkbox {
+  display: none;
+}
+.Toggle-switch-label {
+  display: block;
+  overflow: hidden;
+  cursor: pointer;
+  border: 0 solid #bbb;
+  border-radius: 20px;
+  margin: 0;
+}
+.Toggle-switch-inner {
+  display: block;
+  width: 200%;
+  margin-left: -100%;
+  transition: margin 0.3s ease-in 0s;
+}
+.Toggle-switch-inner:before,
+.Toggle-switch-inner:after {
+  display: block;
+  float: left;
+  width: 50%;
+  height: 34px;
+  padding: 0;
+  line-height: 34px;
+  font-size: 14px;
+  color: white;
+  font-weight: bold;
+  box-sizing: border-box;
+}
+.Toggle-switch-inner:after {
+  content: "All Campaigns";
+  text-transform: uppercase;
+  padding-right: 10px;
+  background-color: #333;
+  color: #fff;
+}
+.Toggle-switch-disabled {
+  background-color: gray;
+  cursor: not-allowed;
+}
+.Toggle-switch-disabled:after {
+  background-color: gray;
+  cursor: not-allowed;
+}
+.Toggle-switch-inner:before {
+  content: "My Campaigns";
+  text-transform: uppercase;
+  padding-left: 10px;
+  background-color: gray;
+  color: #fff;
+  text-align: left;
+}
+.Toggle-switch-switch {
+  display: block;
+  width: 24px;
+  margin: 5px;
+  background: #fff;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 125px;
+  border: 0 solid #bbb;
+  border-radius: 20px;
+  transition: all 0.3s ease-in 0s;
+}
+.Toggle-switch-checkbox:checked + .Toggle-switch-label .Toggle-switch-inner {
+  margin-left: 0;
+}
+.Toggle-switch-checkbox:checked + .Toggle-switch-label .Toggle-switch-switch {
+  right: 0px;
 }

@@ -6,30 +6,29 @@ import Navbar from './Navbar';
 import {pinata} from "../utils/pinataConfig.ts";
 
 const TransactionsPage = () => {
+  const [allTransactions, setAllTransactions] = useState([]);
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
-
-   const handleClick = () => {
-    const index=0;
-    
-    };
+  const [isChecked, setIsChecked] = useState(false);
+  const [myTransactions, setMyTransactions] = useState("");
 
   useEffect(() => {
     const getTransactions = async () => {
        try {
           if (window.ethereum) {
             const provider = new ethers.BrowserProvider(window.ethereum);
-            await provider.send("eth_requestAccounts", []);
+            const accounts = await provider.send("eth_requestAccounts", []);
             const signer = await provider.getSigner();
             const contractAddress = CONTRACT_ADDRESS;
             const contract = new ethers.Contract(contractAddress, abi, signer);
             const txs = await contract.getTransactions();
             const txsData = [];
+            const my = [];
             for(var i=0; i<txs.length; i++){
               const link = await pinata.gateways.convert(txs[i]);
               const response = await fetch(link);
               const jsonData = await(response.json());
-              txsData.push({
+              const txn = {
                 date: jsonData.date,
                 transactionHash: jsonData.transactionHash,
                 organizationLogoUrl: jsonData.organizationLogoUrl,
@@ -39,9 +38,16 @@ const TransactionsPage = () => {
                 gasPrice: jsonData.gasPrice,
                 gasUsed: jsonData.gasUsed,
                 receiverAddress: jsonData.receiverAddress,
-              });
+              };
+              txsData.push(txn);
+              // addresses are not case sensitive
+              if(txn.donorAddress.toLowerCase()===accounts[0].toLowerCase() || txn.receiverAddress.toLowerCase()===accounts[0].toLowerCase()){
+                my.push(txn);
+              }
             }
+            setAllTransactions(txsData);
             setTransactions(txsData);
+            setMyTransactions(my);
             setLoading(false);
           } else {
             console.log("Metamask Not Found");
@@ -53,9 +59,35 @@ const TransactionsPage = () => {
     getTransactions();
   }, []);
 
+ const filterTransactions = () => {
+   const txs = [];
+
+   if (!isChecked) {
+     setTransactions(myTransactions);
+   } else {
+     setTransactions(allTransactions);
+   }
+   setIsChecked(!isChecked);
+ };
+
   return (
     <>
       <Navbar></Navbar>
+      <div className="toggle-button-container">
+        <div className="toggle-switch">
+          <input
+            type="checkbox"
+            className="toggle-switch-checkbox"
+            name="toggleSwitch"
+            id="toggleSwitch"
+            onChange={filterTransactions}
+          />
+          <label className="toggle-switch-label" htmlFor="toggleSwitch">
+            <span className="toggle-switch-inner" /> 
+            <span className="toggle-switch-switch" />
+          </label>
+        </div>
+      </div>
       <div className="transactions-container">
         {loading ? (
           <p>Loading transactions...</p>
@@ -93,7 +125,8 @@ const TransactionsPage = () => {
                     {tx.receiverAddress.slice(-5)}
                   </td>
                   <td>
-                    <button onClick={() => {
+                    <button
+                      onClick={() => {
                         window.open(
                           "http://localhost:3000/receipt?hash=" +
                             tx.transactionHash +
@@ -108,7 +141,10 @@ const TransactionsPage = () => {
                           "mywindow",
                           "menubar=1,resizable=1,width=650,height=1024"
                         );
-                    }}>View</button>
+                      }}
+                    >
+                      View
+                    </button>
                   </td>
                 </tr>
               ))}

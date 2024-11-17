@@ -51,9 +51,6 @@ function Navbar() {
          <li className={`link ${activeLink === '/transactions' ? 'active' : ''}`}>
           <Link to="/transactions">Transactions</Link>
         </li>
-         <li className={`link ${activeLink === '/my-campaigns' ? 'active' : ''}`}>
-          <Link to="/my-campaigns">My Campaigns</Link>
-        </li>
         <li onClick={toggleDropdown} className="dropdown address">
           {userAddress.substring(0, 5)}...{userAddress.slice(-5)}
           <ul className={`dropdown-menu ${dropdownOpen ? 'show' : ''}`}>

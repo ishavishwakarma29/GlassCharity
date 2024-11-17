@@ -11,13 +11,16 @@ import {
 import { pinata } from "../utils/pinataConfig.ts";
 
 function HomePage () {
+  const [allCampaignsData, setAllCampaignsData] = useState([]);
   const [campaignsData, setCampaignsData] = useState([]);
+  const [myCampaignsData, setMyCampaignsData] = useState([]);
+  const [isChecked, setIsChecked] = useState(false);
 
   async function getAllCampaigns() {
     try {
       if (window.ethereum) {
         const provider = new ethers.BrowserProvider(window.ethereum);
-        await provider.send("eth_requestAccounts", []);
+        const accounts = await provider.send("eth_requestAccounts", []);
         const signer = await provider.getSigner();
         const contractAddress = CONTRACT_ADDRESS;
         const contract = new ethers.Contract(contractAddress, abi, signer);
@@ -28,20 +31,26 @@ function HomePage () {
           (_, i) => Object.values(AllCampaigns[i])
         );
         var arr = [];
+        var my = [];
         for(var i=0; i<actualValues.length; i++){
-          arr.push({
+          const cpn = {
             creatorAddress: actualValues[i][0],
             id: actualValues[i][1],
             title: actualValues[i][2],
             description: actualValues[i][3],
-             targetAmount: actualValues[i][4],
-             totalDonated: actualValues[i][5],
-             isActive: actualValues[i][6],
+            targetAmount: actualValues[i][4],
+            totalDonated: actualValues[i][5],
+            isActive: actualValues[i][6],
             logo: await pinata.gateways.convert(actualValues[i][7]),
-          });
+          };
+          arr.push(cpn);
+          if(cpn.creatorAddress.toLowerCase() === accounts[0].toLowerCase()){
+            my.push(cpn);
+          }
         }
-        console.log(arr);
+        setAllCampaignsData(arr);
         setCampaignsData(arr);
+        setMyCampaignsData(my);
       } else {
         console.log("Metamask Not Found");
       }
@@ -53,15 +62,38 @@ function HomePage () {
     getAllCampaigns();
   }, []);
 
+  const filterCampaigns = () => {
+    if (!isChecked) {
+      setCampaignsData(myCampaignsData);
+    } else {
+      setCampaignsData(allCampaignsData);
+    }
+    setIsChecked(!isChecked);
+  };
+
      return (
        <>
          <Navbar></Navbar>
+         <div className="toggle-button-container">
+           <div className="Toggle-switch">
+             <input
+               type="checkbox"
+               className="Toggle-switch-checkbox"
+               name="ToggleSwitch"
+               id="ToggleSwitch"
+               onChange={filterCampaigns}
+             />
+             <label className="Toggle-switch-label" htmlFor="ToggleSwitch">
+               <span className="Toggle-switch-inner" />
+               <span className="Toggle-switch-switch" />
+             </label>
+           </div>
+         </div>
          <div className="page">
-           <header className="header">
-           </header>
+           <header className="header"></header>
            <div className="grid">
              {campaignsData.map((campaign) => (
-                <CampaignCard campaign={campaign}></CampaignCard>
+               <CampaignCard campaign={campaign}></CampaignCard>
              ))}
            </div>
          </div>

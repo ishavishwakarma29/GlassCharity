@@ -1,11 +1,13 @@
+.toggle-button-container{
+  width: 200px;
+  margin-top: 4%;
+}
+
 .transactions-container {
-  margin: 0 auto;
   padding: 20px;
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
+  background-color: #f3e7e9;
   border-radius: 8px;
   font-family: Arial, sans-serif;
-  margin-top: 4%;
 }
 
 h1 {
@@ -15,6 +17,11 @@ h1 {
 }
 
 .transactions-table {
+  background-color: #eef9b6;
+  border-radius: 8px;
+    -webkit-box-shadow: 2px 2px 6px #000000;
+       -moz-box-shadow: 0px 0px 6px #000000;
+            box-shadow: 2px 2px 6px #000000; 
   width: 100%;
   border-collapse: collapse;
 }
@@ -27,11 +34,95 @@ h1 {
 }
 
 .transactions-table th {
-  background-color: #007bff;
+  background-color: #4caf50;
   color: white;
   font-weight: bold;
 }
 
-.transactions-table tbody tr:nth-child(even) {
-  background-color: #f2f2f2;
+.toggle-switch {
+  margin-left: 10%;
+  margin-top: 2%;
+  position: relative;
+  width: 200px;
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  text-align: right;
 }
+.toggle-switch-checkbox {
+  display: none;
+}
+.toggle-switch-label {
+  display: block;
+  overflow: hidden;
+  cursor: pointer;
+  border: 0 solid #bbb;
+  border-radius: 20px;
+  margin: 0;
+}
+.toggle-switch-inner {
+  display: block;
+  width: 200%;
+  margin-left: -100%;
+  transition: margin 0.3s ease-in 0s;
+}
+.toggle-switch-inner:before,
+.toggle-switch-inner:after {
+  display: block;
+  float: left;
+  width: 50%;
+  height: 34px;
+  padding: 0;
+  line-height: 34px;
+  font-size: 14px;
+  color: white;
+  font-weight: bold;
+  box-sizing: border-box;
+}
+.toggle-switch-inner:after {
+  content: "All Transactions";
+  text-transform: uppercase;
+  padding-right: 10px;
+  background-color: #333;
+  color: #fff;
+}
+.toggle-switch-disabled {
+  background-color: gray;
+  cursor: not-allowed;
+}
+.toggle-switch-disabled:after {
+  background-color: gray;
+  cursor: not-allowed;
+}
+.toggle-switch-inner:before {
+  content: "My Transactions";
+  text-transform: uppercase;
+  padding-left: 10px;
+  background-color: gray;
+  color: #fff;
+  text-align: left;
+}
+.toggle-switch-switch {
+  display: block;
+  width: 24px;
+  margin: 5px;
+  background: #fff;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 165px;
+  border: 0 solid #bbb;
+  border-radius: 20px;
+  transition: all 0.3s ease-in 0s;
+}
+.toggle-switch-checkbox:checked + .toggle-switch-label .toggle-switch-inner {
+  margin-left: 0;
+}
+.toggle-switch-checkbox:checked + .toggle-switch-label .toggle-switch-switch {
+  right: 0px;
+}
+
+
+
