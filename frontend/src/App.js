@@ -7,6 +7,7 @@ import LandingPage from "./components/LandingPage";
 import "./App.css";
 import CampaignPage from "./components/CampaignPage";
 import DonationReceipt from "./components/DonationReceipt";
+import TransactionsPage from "./components/TransactionsPage";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/create-campaign" element={<CreateCampaignForm />} />
           <Route path="/campaign-page" element={<CampaignPage />} />
           <Route path="/receipt" element={<DonationReceipt />} />
+          <Route path="/transactions" element={<TransactionsPage />} />
         </Routes>
       </div>
     </Router>

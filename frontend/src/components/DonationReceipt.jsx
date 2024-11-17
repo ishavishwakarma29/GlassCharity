@@ -1,10 +1,16 @@
 import React, {useEffect, useState} from "react";
 import { useSearchParams } from "react-router-dom";
 import "./css/DonationReceipt.css";
-import { ethers } from "ethers";
+import { ethers, Wallet } from "ethers";
 import {pinata} from "../utils/pinataConfig.ts"
 import favicon from "./assets/favicon.ico";
 import html2pdf from "html2pdf.js";
+import {
+  abi,
+  API_URL,
+  CONTRACT_ADDRESS,
+  PRIVATE_KEY,
+} from "../utils/constants";
 
 const DonationReceipt = () => {
   const [data] = useSearchParams();
@@ -19,13 +25,14 @@ const DonationReceipt = () => {
 
   async function handleDownload(){
     const element = document.getElementById("receipt");
-    html2pdf(element);
+    html2pdf().from(element).save(transactionHash+".pdf");
   }
 
   useEffect(() => {
     const fetchReceipt = async () => {
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const receipt = await provider.getTransactionReceipt(data.get("hash"));
+    console.log(data.get("hash"));
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const receipt = await provider.getTransactionReceipt(data.get("hash"));
       console.log(receipt);
       setCampaignName(data.get("name"));
       setTransactionHash(data.get("hash"));
@@ -62,6 +69,9 @@ const DonationReceipt = () => {
 
           <div className="receipt-details">
             <p>
+              <strong>Date:</strong> {Date()}
+            </p>
+            <p>
               <strong>Campaign Name:</strong> {campaignName}
             </p>
             <p>
@@ -94,7 +104,9 @@ const DonationReceipt = () => {
           </p>
         </div>
       </div>
-      <button className="downloadBtn" onClick={handleDownload}>Download</button>
+      <button className="downloadBtn" onClick={handleDownload}>
+        Download
+      </button>
     </>
   );
 };

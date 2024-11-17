@@ -1,14 +1,19 @@
-import React, { useEffect, useState } from "react";
-import "./css/Navbar.css";
+import React, { useState, useEffect } from 'react';
+import './css/Navbar.css';
 import favicon from "./assets/favicon.ico";
+import { useLocation, Link } from "react-router-dom";
 
-
-const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+function Navbar() {
   const [userAddress, setUserAddress] = useState("");
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [activeLink, setActiveLink] = useState("/home");
+  const location = useLocation();
 
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
 
-   async function getAccountAddress() {
+  async function getAccountAddress() {
      try {
        if (!window.ethereum) return alert("please install metamask!");
        const accounts = await window.ethereum.request({
@@ -16,39 +21,48 @@ const Navbar = () => {
        });
        if (accounts.length) {
          setUserAddress(accounts[0]);
-       } else console.log("an error occured");
+       } else console.log("an error occurred");
      } catch (error) {
        console.log(error);
      }
    }
 
-
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
-
    useEffect(() => {
      getAccountAddress();
-   }, []);
+     setActiveLink(location.pathname); // Set the active link based on current route
+   }, [location.pathname]);
 
   return (
-    <>
-      <nav className="navbar">
-        <div className="navbar-brand">
-          <img src={favicon} className="icon"></img>
-            <div className="title">Glass Charity</div>
-            <div className="subtitle">
-              Explore all active campaigns and support a cause today!
-            </div>
+    <nav className="navbar">
+      <div className="navbar-brand">
+        <img src={favicon} className="icon" alt="favicon" />
+        <div className="title">Glass Charity</div>
+        <div className="subtitle">
+          Explore all active campaigns and support a cause today!
         </div>
-        <div className={`nav-links ${isOpen ? "active" : ""}`}>
-          <span className="link"><a href="/home">Home</a></span>
-          <span className="link"><a href="/create-campaign">Create a Campaign</a></span>
-          <span className="address"><a>{userAddress}</a></span>
-        </div>
-      </nav>
-    </>
+      </div>
+      <ul className="navbar-links">
+        <li className={`link ${activeLink === '/home' ? 'active' : ''}`}> 
+          <Link to="/home">Home</Link>
+        </li>
+        <li className={`link ${activeLink === '/create-campaign' ? 'active' : ''}`}>
+          <Link to="/create-campaign">Create a Campaign</Link>
+        </li>
+         <li className={`link ${activeLink === '/transactions' ? 'active' : ''}`}>
+          <Link to="/transactions">Transactions</Link>
+        </li>
+         <li className={`link ${activeLink === '/my-campaigns' ? 'active' : ''}`}>
+          <Link to="/my-campaigns">My Campaigns</Link>
+        </li>
+        <li onClick={toggleDropdown} className="dropdown address">
+          {userAddress.substring(0, 5)}...{userAddress.slice(-5)}
+          <ul className={`dropdown-menu ${dropdownOpen ? 'show' : ''}`}>
+            <li>Profile</li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
   );
-};
+}
 
 export default Navbar;

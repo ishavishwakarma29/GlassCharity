@@ -4,13 +4,7 @@ pragma solidity ^0.8.0;
 contract CharityDonationTracker {
     address public owner;
     uint256 public campaignCount;
-
-    // Struct for each donation
-    struct Donation {
-        address donor;
-        uint256 amount;
-        uint256 timestamp;
-    }
+    uint256 public transactionCount;
 
     // Struct for each campaign
     struct Campaign {
@@ -24,11 +18,13 @@ contract CharityDonationTracker {
         string imageHash;
     }
 
+    // Mapping to store transactions
+    mapping(uint256 => string) public transactions;
+
+    // Mapping to store index 
+
     // Mapping to store all campaigns
     mapping(uint256 => Campaign) public campaigns;
-
-    //mapping for donations
-    mapping(uint256 => Donation[]) donation;
 
     // Modifier to restrict actions to the owner
     modifier onlyOwner() {
@@ -40,6 +36,7 @@ contract CharityDonationTracker {
     constructor() {
         owner = msg.sender;
         campaignCount = 0;
+        transactionCount = 0;
     }
 
     // Function to create a new campaign
@@ -70,26 +67,28 @@ contract CharityDonationTracker {
         Campaign storage campaign = campaigns[_campaignId];
         campaign.totalDonated += msg.value;
 
-        // Add the new donation to the donations array
-        donation[_campaignId].push(Donation({
-            donor: msg.sender,
-            amount: msg.value,
-            timestamp: block.timestamp
-        }));
         address payable rec = payable(campaign.creatorAddress);
         rec.transfer(msg.value);
+    }
+
+    // Function to save a transaction
+    function saveTransaction(string memory ipfshash) public {
+        transactions[transactionCount] = ipfshash;
+        transactionCount++;
+    }
+
+    //Function to get transaction
+    function getTransactions() public view returns (string[] memory){
+        string[] memory allTransactions = new string[](transactionCount);
+        for (uint256 i = 0; i < transactionCount; i++) {
+            allTransactions[i]=transactions[i];
+        }
+        return allTransactions;
     }
 
     // Function to end a campaign
     function endCampaign(uint256 _campaignId) public {
         campaigns[_campaignId].isActive = false;
-    }
-
-    // Function to get donations for a specific campaign
-    function getDonations(uint256 _campaignId) 
-        public view returns (Donation[] memory) 
-    {
-        return donation[_campaignId];
     }
 
     function getAllCampaigns() public view returns (Campaign[] memory)

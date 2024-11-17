@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { ethers } from "ethers";
 import "./css/CampaignPage.css";
-import { abi, CONTRACT_ADDRESS } from "../utils/constants";
+import { abi, CONTRACT_ADDRESS, API_URL, PRIVATE_KEY } from "../utils/constants";
 import {pinata} from "../utils/pinataConfig.ts";
 
 const CampaignPage = () => {
@@ -24,6 +24,7 @@ const CampaignPage = () => {
         const collected = ethers.formatEther(Object.values(res)[5]);
         const goal = ethers.formatEther(Object.values(res)[4]);
         const percent = (collected*100/goal);
+        console.log(res);
         setCampaign({
           id: Object.values(res)[1],
           title: Object.values(res)[2],
@@ -40,6 +41,30 @@ const CampaignPage = () => {
     fetchCampaignData();
   }, []);
 
+  const saveTransaction = async (transaction, name, logo, address, val) => {
+   const provider = new ethers.JsonRpcProvider(API_URL);
+   const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
+   const contractAddress = CONTRACT_ADDRESS;
+   const contract = new ethers.Contract(contractAddress, abi, wallet);
+    const receipt = await provider.getTransactionReceipt(transaction.hash);
+    console.log(receipt);
+    const json = {
+      date: Date(),
+      transactionHash: transaction.hash,
+      organizationLogoUrl: await pinata.gateways.convert(logo),
+      campaignName: name,
+      donorAddress: receipt.from,
+      receiverAddress: address,
+      amount: ethers.formatEther(val),
+      gasPrice: ethers.formatEther(receipt.gasPrice),
+      gasUsed: ethers.formatEther(receipt.gasUsed),
+    };
+    const res = await pinata.upload.json(json);
+    console.log(res);
+    const savedTxs = await contract.saveTransaction(res.IpfsHash);
+    console.log(savedTxs);
+  }
+
   const handleDonate = async () => {
     setIsLoading(true);
     try {
@@ -52,12 +77,7 @@ const CampaignPage = () => {
        const value = ethers.parseEther(amount);
        const transaction = await contract.donate(campaign.id, { value });
        await transaction.wait();
-       console.log("from: "+transaction.from);
-       console.log("gasPrice: "+ethers.formatEther(transaction.gasPrice));
-       console.log("hash: "+transaction.hash);
-       console.log("to: "+transaction.to);
-        console.log("to: "+ethers.formatEther(transaction.value));
-      alert("Thank you for your donation!");
+       await saveTransaction(transaction, campaign.title, (campaign.logoUrl.split('/').pop()), campaign.creator, value);
       const tot = Number(ethers.parseEther(campaign.totalCollected)) + Number(value);
       setAmountRaised(ethers.formatEther(tot));
       const percent = (amountRaised*100)/campaign.goal;
