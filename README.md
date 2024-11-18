@@ -33,7 +33,7 @@ A **blockchain-based decentralized application (dApp)** that ensures transparenc
 1. Clone the repository:
    ```bash
    git clone https://github.com/ishavishwakarma29/GlassCharity.git
-   cd HackWeb3
+   cd GlassCharity
 2. Install Dependencies:
     ```bash
    cd frontend
