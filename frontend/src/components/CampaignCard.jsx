@@ -10,10 +10,10 @@ const CampaignCard = (props) => {
     }
     const pageUrl = "/campaign-page?id="+props.campaign.id;
   return (
-    <div key={props.campaign.id} className="card">
+    <div key={props.campaign.id} className="card" style={{backgroundColor: (props.campaign.isActive)?'#eef9b6':"gray"}}>
       <img src={props.campaign.logo} alt="Campaign Logo" className="logo" />
-      <h2 className="cardTitle">{props.campaign.title}</h2>
-      <p className="cardDescription">{trimmedString}</p>
+      <h2 className="cardTitle" style={{color: (props.campaign.isActive)?'black':"white"}}>{props.campaign.title}</h2>
+      <p className="cardDescription" style={{color: (props.campaign.isActive)?'black':"white"}}>{trimmedString}</p>
       <a className="button" href={pageUrl}>View</a>
     </div>
   );

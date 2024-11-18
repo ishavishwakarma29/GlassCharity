@@ -10,13 +10,16 @@ const CampaignPage = () => {
   const [campaign, setCampaign] = useState({});
   const [amount, setAmount] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isEnding, setIsEnding] = useState(false);
   const [amountRaised, setAmountRaised] = useState("");
   const [collectedPercent, setCollectedPercent] = useState("");
+  const [myAddress, setMyAddress] = useState("");
 
   useEffect(() => {  
     const fetchCampaignData = async () => {
         const provider = new ethers.BrowserProvider(window.ethereum);
-        await provider.send("eth_requestAccounts", []);
+        const accounts = await provider.send("eth_requestAccounts", []);
+        setMyAddress(accounts[0]);
         const signer = await provider.getSigner();
         const contractAddress = CONTRACT_ADDRESS;
         const contract = new ethers.Contract(contractAddress, abi, signer);
@@ -31,8 +34,9 @@ const CampaignPage = () => {
           description: Object.values(res)[3],
           goal: ethers.formatEther(Object.values(res)[4]),
           logoUrl: await pinata.gateways.convert(Object.values(res)[7]),
-          creator: Object.values(res)[0],
+          creator: Object.values(res)[0].toLowerCase(),
           totalCollected: ethers.formatEther(Object.values(res)[5]),
+          isActive: Object.values(res)[6],
         });
         setAmountRaised(ethers.formatEther(Object.values(res)[5]));
         setCollectedPercent(Math.min(100, percent).toFixed(10));
@@ -97,6 +101,27 @@ const CampaignPage = () => {
     setIsLoading(false);
   };
 
+  const handleEnd = async () => {
+    setIsEnding(true);
+    try {
+     if (window.ethereum) {
+       const provider = new ethers.BrowserProvider(window.ethereum);
+       await provider.send("eth_requestAccounts", []);
+       const signer = await provider.getSigner();
+       const contractAddress = CONTRACT_ADDRESS;
+       const contract = new ethers.Contract(contractAddress, abi, signer);
+       const transaction = await contract.endCampaign(campaign.id);
+       await transaction.wait();
+     } else {
+       console.log("Metamask Not Found");
+     }
+    } catch (error) {
+      console.error("failed:", error);
+      alert("failed to end campaign");
+    }
+    setIsEnding(false);
+  }
+
   return (
     <div className="campaign-container">
       <aside className="campaign-sidebar">
@@ -122,7 +147,8 @@ const CampaignPage = () => {
       <main className="campaign-details">
         <h2>About this Campaign</h2>
         <p className="campaign-description">{campaign.description}</p>
-        <div className="donation-section">
+        <h3 style={{display: (campaign.isActive?"none":"block"), color: "red"}}>This campaign is not active.</h3>
+        <div className="donation-section" style={{display: (campaign.isActive?"block":"none")}}>
           <h2>Support this Campaign</h2>
           <input
             type="text"
@@ -137,6 +163,14 @@ const CampaignPage = () => {
             disabled={isLoading}
           >
             {isLoading ? "Processing..." : "Donate Now"}
+          </button>
+             <button
+            style={{display: (myAddress === campaign.creator)?"block":"none"}}
+            onClick={handleEnd}
+            className="end-button"
+            disabled={isEnding}
+          >
+            {isEnding ? "Processing..." : "End Campaign"}
           </button>
         </div>
       </main>

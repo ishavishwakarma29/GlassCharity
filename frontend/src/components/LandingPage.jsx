@@ -1,9 +1,9 @@
 // HomePage.js
 import React, {useState, useEffect} from "react";
 import "./css/LandingPage.css";
+import { ethers } from "ethers";
 
 function LandingPage() {
-
     async function getAccountAddress() {
       try {
         if (!window.ethereum) return alert("please install metamask!");
@@ -18,7 +18,6 @@ function LandingPage() {
         console.log(error);
       }
     }
-
   return (
     <div className="cont">
       <div className="subC">

@@ -12,6 +12,10 @@ const TransactionsPage = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [myTransactions, setMyTransactions] = useState("");
 
+  const userAuth = async () => {
+    
+  }
+
   useEffect(() => {
     const getTransactions = async () => {
        try {
@@ -56,6 +60,7 @@ const TransactionsPage = () => {
      console.log(error);
     }
     }
+    userAuth();
     getTransactions();
   }, []);
 

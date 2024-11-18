@@ -16,6 +16,12 @@ function HomePage () {
   const [myCampaignsData, setMyCampaignsData] = useState([]);
   const [isChecked, setIsChecked] = useState(false);
 
+   window.ethereum.on('accountsChanged', function (accounts) {
+      if(accounts.length === 0){
+        window.location.replace("http://localhost:3000");
+      }
+   });
+
   async function getAllCampaigns() {
     try {
       if (window.ethereum) {
