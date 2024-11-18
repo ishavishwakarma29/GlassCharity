@@ -14,8 +14,19 @@ const CampaignPage = () => {
   const [amountRaised, setAmountRaised] = useState("");
   const [collectedPercent, setCollectedPercent] = useState("");
   const [myAddress, setMyAddress] = useState("");
+  const [fetching, setFetching] = useState(true);
+
+
+  // to handle account lock/disconnect or change
+   window.ethereum.on("accountsChanged", function (accounts) {
+     if (accounts.length === 0) {
+       window.location.replace("http://localhost:3000");
+     }
+   });
+
 
   useEffect(() => {  
+    // fetching campaign data
     const fetchCampaignData = async () => {
         const provider = new ethers.BrowserProvider(window.ethereum);
         const accounts = await provider.send("eth_requestAccounts", []);
@@ -40,11 +51,13 @@ const CampaignPage = () => {
         });
         setAmountRaised(ethers.formatEther(Object.values(res)[5]));
         setCollectedPercent(Math.min(100, percent).toFixed(10));
+        setFetching(false);
     };
 
     fetchCampaignData();
   }, []);
 
+  // function to save transaction in blockchain
   const saveTransaction = async (transaction, name, logo, address, val) => {
    const provider = new ethers.JsonRpcProvider(API_URL);
    const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
@@ -69,6 +82,7 @@ const CampaignPage = () => {
     console.log(savedTxs);
   }
 
+  // function to handle donations to a organisation
   const handleDonate = async () => {
     setIsLoading(true);
     try {
@@ -86,6 +100,7 @@ const CampaignPage = () => {
       setAmountRaised(ethers.formatEther(tot));
       const percent = (amountRaised*100)/campaign.goal;
       setCollectedPercent(Math.min(100, percent).toFixed(10));
+      setAmount("");
       window.open(
         "http://localhost:3000/receipt?hash="+transaction.hash+"&name="+campaign.title+"&address="+campaign.creator+"&logo="+(campaign.logoUrl.split('/').pop())+"&value="+value,
         "mywindow",
@@ -101,6 +116,7 @@ const CampaignPage = () => {
     setIsLoading(false);
   };
 
+  // function to handle end organisation
   const handleEnd = async () => {
     setIsEnding(true);
     try {
@@ -123,7 +139,9 @@ const CampaignPage = () => {
   }
 
   return (
-    <div className="campaign-container">
+    <>
+       {fetching ? (<p>Loading...</p>):
+       <div className="campaign-container">
       <aside className="campaign-sidebar">
         <img
           src={campaign.logoUrl}
@@ -174,8 +192,8 @@ const CampaignPage = () => {
           </button>
         </div>
       </main>
-    </div>
-  );
+    </div>}
+    </>);
 };
 
 export default CampaignPage;

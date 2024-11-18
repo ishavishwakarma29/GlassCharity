@@ -8,6 +8,7 @@ import "./App.css";
 import CampaignPage from "./components/CampaignPage";
 import DonationReceipt from "./components/DonationReceipt";
 import TransactionsPage from "./components/TransactionsPage";
+import Profile from "./components/Profile";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/campaign-page" element={<CampaignPage />} />
           <Route path="/receipt" element={<DonationReceipt />} />
           <Route path="/transactions" element={<TransactionsPage />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </div>
     </Router>

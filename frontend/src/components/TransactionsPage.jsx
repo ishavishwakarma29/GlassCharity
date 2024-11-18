@@ -12,11 +12,15 @@ const TransactionsPage = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [myTransactions, setMyTransactions] = useState("");
 
-  const userAuth = async () => {
-    
-  }
+  // function to detect account change/disconnect
+   window.ethereum.on("accountsChanged", function (accounts) {
+     if (accounts.length === 0) {
+       window.location.replace("http://localhost:3000");
+     }
+   });
 
   useEffect(() => {
+    // to get transactions
     const getTransactions = async () => {
        try {
           if (window.ethereum) {
@@ -28,7 +32,7 @@ const TransactionsPage = () => {
             const txs = await contract.getTransactions();
             const txsData = [];
             const my = [];
-            for(var i=0; i<txs.length; i++){
+            for(var i=txs.length-1; i>=0; i--){
               const link = await pinata.gateways.convert(txs[i]);
               const response = await fetch(link);
               const jsonData = await(response.json());
@@ -60,10 +64,10 @@ const TransactionsPage = () => {
      console.log(error);
     }
     }
-    userAuth();
     getTransactions();
   }, []);
 
+  // to filter transactions
  const filterTransactions = () => {
    const txs = [];
 

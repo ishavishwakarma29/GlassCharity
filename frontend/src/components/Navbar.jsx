@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './css/Navbar.css';
 import favicon from "./assets/favicon.ico";
 import { useLocation, Link } from "react-router-dom";
+import {MetaMaskAvatar} from 'react-metamask-avatar';
 
 function Navbar() {
   const [userAddress, setUserAddress] = useState("");
@@ -42,20 +43,28 @@ function Navbar() {
         </div>
       </div>
       <ul className="navbar-links">
-        <li className={`link ${activeLink === '/home' ? 'active' : ''}`}> 
+        <li className={`link ${activeLink === "/home" ? "active" : ""}`}>
           <Link to="/home">Home</Link>
         </li>
-        <li className={`link ${activeLink === '/create-campaign' ? 'active' : ''}`}>
+        <li
+          className={`link ${
+            activeLink === "/create-campaign" ? "active" : ""
+          }`}
+        >
           <Link to="/create-campaign">Create a Campaign</Link>
         </li>
-         <li className={`link ${activeLink === '/transactions' ? 'active' : ''}`}>
+        <li
+          className={`link ${activeLink === "/transactions" ? "active" : ""}`}
+        >
           <Link to="/transactions">Transactions</Link>
         </li>
-        <li onClick={toggleDropdown} className="dropdown address">
-          {userAddress.substring(0, 5)}...{userAddress.slice(-5)}
-          <ul className={`dropdown-menu ${dropdownOpen ? 'show' : ''}`}>
-            <li>Profile</li>
-          </ul>
+        <li
+          className={`address link ${activeLink === "/profile" ? "active" : ""}`}
+        >
+          <Link to="/profile">
+            {userAddress.substring(0, 5)}...{userAddress.slice(-5)}
+            <MetaMaskAvatar address={userAddress} size={18}></MetaMaskAvatar>
+          </Link>
         </li>
       </ul>
     </nav>

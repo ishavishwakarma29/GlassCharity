@@ -1,5 +1,5 @@
 // CreateCampaignForm.js
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import "./css/CreateCampaignForm.css";
 import { ethers } from "ethers";
 import {
@@ -14,10 +14,21 @@ function CreateCampaignForm() {
   const [description, setDescription] = useState("");
   const [targetAmount, setTargetAmount] = useState("");
   const [image, setImage] = useState(null);
-  const [statusMessage, setStatusMessage] = useState("");
+  const [statusMessage, setStatusMessage] = useState("Create Campaign");
+  const [isLoading, setIsLoading] = useState(false);
+  const ref = useRef();
+
+   window.ethereum.on("accountsChanged", function (accounts) {
+     if (accounts.length === 0) {
+       window.location.replace("http://localhost:3000");
+     }
+   });
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setStatusMessage("Processing...");
+    setIsLoading(true);
       try {
         if (window.ethereum) {
           const provider = new ethers.BrowserProvider(window.ethereum);
@@ -28,7 +39,13 @@ function CreateCampaignForm() {
           const upload = await pinata.upload.file(image);
           const target = ethers.parseEther(targetAmount);
           const result = await contract.createCampaign(name, description, target, upload.IpfsHash);
+          setName("");
+          setDescription("");
+          setTargetAmount("");
+          ref.current.value = "";
+          setStatusMessage("Create Campaign");
           console.log(result);
+          setIsLoading(false);
         } else {
           console.log("Metamask Not Found");
         }
@@ -71,11 +88,10 @@ function CreateCampaignForm() {
           </div>
           <div className="form-group">
             <label>Campaign Image:</label>
-            <input type="file" onChange={(e) => setImage(e.target.files[0])} />
+            <input type="file" onChange={(e) => setImage(e.target.files[0])} ref={ref}/>
           </div>
-          <button type="submit">Create Campaign</button>
+          <button type="submit" disabled={isLoading} className="submit-btn">{statusMessage}</button>
         </form>
-        {statusMessage && <p className="status-message">{statusMessage}</p>}
       </div>
     </>
   );

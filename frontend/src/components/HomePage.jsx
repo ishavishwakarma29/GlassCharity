@@ -14,14 +14,17 @@ function HomePage () {
   const [allCampaignsData, setAllCampaignsData] = useState([]);
   const [campaignsData, setCampaignsData] = useState([]);
   const [myCampaignsData, setMyCampaignsData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [isChecked, setIsChecked] = useState(false);
 
+  // to detect account change/disconnect or lock
    window.ethereum.on('accountsChanged', function (accounts) {
       if(accounts.length === 0){
         window.location.replace("http://localhost:3000");
       }
    });
 
+  //  fetching campaigns data
   async function getAllCampaigns() {
     try {
       if (window.ethereum) {
@@ -38,7 +41,7 @@ function HomePage () {
         );
         var arr = [];
         var my = [];
-        for(var i=0; i<actualValues.length; i++){
+        for(var i=actualValues.length-1; i>=0; i--){
           const cpn = {
             creatorAddress: actualValues[i][0],
             id: actualValues[i][1],
@@ -57,6 +60,7 @@ function HomePage () {
         setAllCampaignsData(arr);
         setCampaignsData(arr);
         setMyCampaignsData(my);
+        setLoading(false);
       } else {
         console.log("Metamask Not Found");
       }
@@ -68,6 +72,7 @@ function HomePage () {
     getAllCampaigns();
   }, []);
 
+  // filtering data 
   const filterCampaigns = () => {
     if (!isChecked) {
       setCampaignsData(myCampaignsData);
@@ -96,12 +101,17 @@ function HomePage () {
            </div>
          </div>
          <div className="page">
-           <header className="header"></header>
+         <header className="header"></header>
+         {loading ? (
+          <p>Loading campaigns...</p>
+        ) : campaignsData.length === 0 ? (
+          <p>No campaigns found.</p>
+        ) : (
            <div className="grid">
              {campaignsData.map((campaign) => (
                <CampaignCard campaign={campaign}></CampaignCard>
              ))}
-           </div>
+           </div>)}
          </div>
        </>
      );

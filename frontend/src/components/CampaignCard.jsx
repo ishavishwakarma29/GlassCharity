@@ -15,6 +15,7 @@ const CampaignCard = (props) => {
       <h2 className="cardTitle" style={{color: (props.campaign.isActive)?'black':"white"}}>{props.campaign.title}</h2>
       <p className="cardDescription" style={{color: (props.campaign.isActive)?'black':"white"}}>{trimmedString}</p>
       <a className="button" href={pageUrl}>View</a>
+      <p className="cardDescription" style={{display: (props.campaign.isActive)?'none':"block", color: "white"}}>Not Active</p>
     </div>
   );
 };

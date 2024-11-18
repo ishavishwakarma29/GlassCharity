@@ -56,14 +56,14 @@ a{
 }
 
 .address{
-  margin-right: 100px;
+  margin-right: 40px;
   padding: 5px;
   border-radius: 5px;
   background-color: rgba(255, 251, 251, 0.155);
 }
 
 .dropdown-menu {
-  min-width: 170px;
+  min-width: 200px;
   display: none;
   position: absolute;
   top: 100%;

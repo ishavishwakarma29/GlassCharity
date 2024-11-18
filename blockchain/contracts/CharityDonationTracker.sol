@@ -18,6 +18,8 @@ contract CharityDonationTracker {
         string imageHash;
     }
 
+    
+
     // Mapping to store transactions
     mapping(uint256 => string) public transactions;
 
