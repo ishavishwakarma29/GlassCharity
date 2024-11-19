@@ -55,7 +55,7 @@ A **blockchain-based decentralized application (dApp)** that ensures transparenc
    cd frontend
    npm start
 9. Open the application in your browser at "http://localhost:3000"
-
+***
 ## 📷 Screenshots
 ### Landing page
 ![Screenshot (1112)](https://github.com/user-attachments/assets/b18a1087-4ccd-4b0b-a4a5-ed7ecc30847b)
@@ -84,7 +84,9 @@ A **blockchain-based decentralized application (dApp)** that ensures transparenc
 ### Profile
 ![Screenshot (1111)](https://github.com/user-attachments/assets/c7d210ad-c16a-4d4b-8974-21d6e078e5e8)
 ***
-
+## 📽️ Demo Video
+![Demo](https://youtu.be/CdnUNf0Thsc)
+***
 ## 🔮Future work
 - Identity verification for campaign creators
 - Search campaigns and transactions
