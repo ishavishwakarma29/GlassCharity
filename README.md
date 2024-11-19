@@ -85,7 +85,7 @@ A **blockchain-based decentralized application (dApp)** that ensures transparenc
 ![Screenshot (1111)](https://github.com/user-attachments/assets/c7d210ad-c16a-4d4b-8974-21d6e078e5e8)
 ***
 ## 📽️ Demo Video
-![Demo](https://youtu.be/CdnUNf0Thsc)
+[Demo](https://youtu.be/CdnUNf0Thsc)
 ***
 ## 🔮Future work
 - Identity verification for campaign creators
